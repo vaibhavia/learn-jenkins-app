@@ -17,6 +17,7 @@ pipeline {
                     npm ci
                     npm run build
                     ls -la
+                    echo "npm dependencies installed using npm ci command and then we ran the build"
                 '''
              }
         }
