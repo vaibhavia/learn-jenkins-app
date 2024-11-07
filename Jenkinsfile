@@ -6,6 +6,7 @@ pipeline {
           with this format you can comment multiple lines...Called comment block format.
           If we directly want to run the TEST stage, we can comment the BUILD stage block and thus only TEST stage will be executed.
         */
+        // This format is used to comment single line. Commented lines turns green.
         /*
         stage('Build') {
             agent {
