@@ -25,7 +25,7 @@ pipeline {
             steps{
                 sh '''
                 echo 'Test stage'
-                touch -f index.html/build
+                test -f build/index.html
                 npm test
                 '''
             }
