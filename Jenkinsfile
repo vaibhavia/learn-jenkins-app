@@ -47,6 +47,24 @@ pipeline {
                 // to run this npm test in TEST stage, we need node modules also called node dependencies to run it. Without installing node js, the npm test command will throw an error. Thus we again called docker agent in the TEST stage so that it installs node image that contains node modules. Even if we had already done it in the BUILD stage, once the stage is done the docker container is destroyed and thus we need to call the docker agent to install node js again.
             }
         }
+        stage('E2E Test'){
+            agent{
+                docker{
+                    image 'mcr.microsoft.com/playwright:v1.48.1-noble'
+                    reuseNode True
+                }
+            }
+            steps{
+                sh '''
+                npm install -g serve
+                // installs serve tool that would help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
+                serve -s build
+                // command to start a webserver
+                npx playwright test
+                // This would start the test
+                '''
+            }
+        }
     }
     post{
         always{
