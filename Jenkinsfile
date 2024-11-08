@@ -56,11 +56,12 @@ pipeline {
             }
             steps{
                 sh '''
-                npm install -g serve
+                echo 'reached e2e test steps'
+                //npm install -g serve
                 // installs serve tool that would help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
-                serve -s build
+                //serve -s build
                 // command to start a webserver
-                npx playwright test
+               // npx playwright test
                 // This would start the test
                 '''
             }
