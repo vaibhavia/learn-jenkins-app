@@ -60,10 +60,11 @@ pipeline {
                 #npm install -g serve - this command installs serve tool GLOBALLY. serve help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
                 npm install serve
                 #installs serve tool LOCALLY.
-                #serve -s build - this command installs serve tool globally
-                node_modules/.bin/serve -s build
-                # using serve tools relative path we are running the tool locally instead of globally
-                #command to start a webserver
+                #serve -s build - this command starts webserver globally
+                #node_modules/.bin/serve -s build - using serve tool's relative path we are starting the webserver locally instead of globally
+                node_modules/.bin/serve -s build &
+                # & in the end of the command runs it in the background. 
+                sleep 10
                 npx playwright test
                 #This would start the test
                 '''
