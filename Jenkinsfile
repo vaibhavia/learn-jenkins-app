@@ -51,12 +51,12 @@ pipeline {
             agent{
                 docker{
                     image 'mcr.microsoft.com/playwright:v1.48.1-noble'
-                    reuseNode True
+                    reuseNode true
                 }
             }
             steps{
                 sh '''
-                echo 'reached e2e test steps'
+                echo 'E2E stage steps'
                 //npm install -g serve
                 // installs serve tool that would help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
                 //serve -s build
