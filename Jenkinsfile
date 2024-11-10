@@ -35,71 +35,82 @@ pipeline {
              }
         }
         */
-        stage('Test'){
-            agent{
-                docker{
-                    image 'node:18-alpine'
-                    reuseNode true
+
+        stage('Run Tests'){
+            parallel{
+                stage('Unit Test'){
+                    agent{
+                        docker{
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps{
+                        sh '''
+                        # Hash is the format to comment a line in the shell block. commented line in shell block does not turn green. But prepended hash does not execute that command.
+                        echo 'Test stage'
+                        #test -f build/index.html
+                        npm test
+                        '''
+                        // to run this npm test in TEST stage, we need node modules also called node dependencies to run it. Without installing node js, the npm test command will throw an error. Thus we again called docker agent in the TEST stage so that it installs node image that contains node modules. Even if we had already done it in the BUILD stage, once the stage is done the docker container is destroyed and thus we need to call the docker agent to install node js again.
+                    }
+                    post{
+                        always{
+                            junit 'junit-test-results/junit.xml'
+                        }
+                    }
+                }
+                stage('E2E Test'){
+                    agent{
+                        docker{
+                            //image 'mcr.microsoft.com/playwright:v1.48.1-noble'
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+                    steps{
+                        sh '''
+                        echo 'E2E stage steps'
+                        #npm install -g serve - this command installs serve tool GLOBALLY. serve help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
+                        npm install serve
+                        #installs serve tool LOCALLY.
+                        #serve -s build - this command starts webserver globally
+                        #node_modules/.bin/serve -s build - using serve tool's relative path we are starting the webserver locally instead of globally
+                        node_modules/.bin/serve -s build &
+                        # & in the end of the command runs it in the background. 
+                        sleep 10
+                        npx playwright test --reporter=html
+                        #This would start the test
+                        '''
+                    }
+                    post{
+                        always{
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+                    }
+                }
+                stage('Deploy'){
+                    agent{
+                        docker{
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps{
+                        sh '''
+                        echo 'Deploy stage'
+                        npm install netlify-cli
+                        node_modules/.bin/netlify --version
+                        echo "Deploying to production. Site Id: $NETLIFY_SITE_ID"
+                        node_modules/.bin/netlify status
+                        node_modules/.bin/netlify deploy --dir=build --prod
+                        '''
+                    }
                 }
             }
-            steps{
-                sh '''
-                # Hash is the format to comment a line in the shell block. commented line in shell block does not turn green. But prepended hash does not execute that command.
-                echo 'Test stage'
-                #test -f build/index.html
-                npm test
-                '''
-                // to run this npm test in TEST stage, we need node modules also called node dependencies to run it. Without installing node js, the npm test command will throw an error. Thus we again called docker agent in the TEST stage so that it installs node image that contains node modules. Even if we had already done it in the BUILD stage, once the stage is done the docker container is destroyed and thus we need to call the docker agent to install node js again.
-            }
         }
-        stage('E2E Test'){
-            agent{
-                docker{
-                    //image 'mcr.microsoft.com/playwright:v1.48.1-noble'
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                }
-            }
-            steps{
-                sh '''
-                echo 'E2E stage steps'
-                #npm install -g serve - this command installs serve tool GLOBALLY. serve help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
-                npm install serve
-                #installs serve tool LOCALLY.
-                #serve -s build - this command starts webserver globally
-                #node_modules/.bin/serve -s build - using serve tool's relative path we are starting the webserver locally instead of globally
-                node_modules/.bin/serve -s build &
-                # & in the end of the command runs it in the background. 
-                sleep 10
-                npx playwright test --reporter=html
-                #This would start the test
-                '''
-            }
-        }
-        stage('Deploy'){
-            agent{
-                docker{
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps{
-                sh '''
-                echo 'Deploy stage'
-                 npm install netlify-cli
-                 node_modules/.bin/netlify --version
-                 echo "Deploying to production. Site Id: $NETLIFY_SITE_ID"
-                 node_modules/.bin/netlify status
-                 node_modules/.bin/netlify deploy --dir=build --prod
-                '''
-            }
-        }
+        
 
     }
-    post{
-        always{
-            junit 'junit-test-results/junit.xml'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
+   
 }
