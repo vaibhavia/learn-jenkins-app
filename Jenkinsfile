@@ -36,7 +36,7 @@ pipeline {
         }
         */
 
-        stage('Run Tests'){
+        stage('Tests'){
             parallel{
                 stage('Unit Test'){
                     agent{
@@ -89,28 +89,25 @@ pipeline {
                         }
                     }
                 }
-                stage('Deploy'){
-                    agent{
-                        docker{
-                            image 'node:18-alpine'
-                            reuseNode true
-                        }
-                    }
-                    steps{
-                        sh '''
-                        echo 'Deploy stage'
-                        npm install netlify-cli
-                        node_modules/.bin/netlify --version
-                        echo "Deploying to production. Site Id: $NETLIFY_SITE_ID"
-                        node_modules/.bin/netlify status
-                        node_modules/.bin/netlify deploy --dir=build --prod
-                        '''
-                    }
-                }
             }
         }
-        
-
+        stage('Deploy'){
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }                  
+            steps{
+                sh '''
+                echo 'Deploy stage'
+                npm install netlify-cli
+                node_modules/.bin/netlify --version
+                echo "Deploying to production. Site Id: $NETLIFY_SITE_ID"
+                node_modules/.bin/netlify status
+                node_modules/.bin/netlify deploy --dir=build --prod
+                '''
+            }
+        }
     }
-   
 }
