@@ -71,7 +71,7 @@ pipeline {
                 node_modules/.bin/serve -s build &
                 # & in the end of the command runs it in the background. 
                 sleep 10
-                npx playwright test
+                npx playwright test --reporter=html
                 #This would start the test
                 '''
             }
