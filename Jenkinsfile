@@ -4,6 +4,8 @@ pipeline {
     environment{
         NETLIFY_SITE_ID = 'b5e53243-8a3a-4607-9673-94f376c15549'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        REACT_APP_VERSION = '1.2.3'
+
     }
 
     stages {
@@ -125,6 +127,7 @@ pipeline {
                     
             environment{
                 CI_ENVIRONMENT_URL = "$env.STAGING_URL"
+                //single quotes pass the values as string and double quotes pass the value in the variable
             }
 
             steps{
@@ -139,15 +142,15 @@ pipeline {
                 }
             }
         }
-        
-        stage('Approval before prod deployment'){             
+        /*
+        stage('Manual Approval before prod deployment'){             
             steps{
                timeout(time: 1, unit: 'MINUTES'){
                     input message: 'Do you want to proceed for prod deployment?', ok: 'Yes, I want to proceed for prod deployment!'
                 }
             }
         }
-        
+        */
         stage('Deploy Prod Setup'){
             agent{
                 docker{
