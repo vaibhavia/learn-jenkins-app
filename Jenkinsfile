@@ -110,15 +110,15 @@ pipeline {
                 '''
             }
         }
-
+        /*
         stage('Approval before prod deployment'){             
             steps{
                timeout(time: 1, unit: 'MINUTES'){
-               input message: 'Do you want to proceed for prod deployment?', ok: 'Yes, I want to proceed for prod deployment!'
+                    input message: 'Do you want to proceed for prod deployment?', ok: 'Yes, I want to proceed for prod deployment!'
                 }
             }
         }
-
+        */
         stage('Deploy Prod Setup'){
             agent{
                 docker{
