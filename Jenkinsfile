@@ -110,7 +110,7 @@ pipeline {
                 '''
             }
         }
-        /*
+        
         stage('Approval before prod deployment'){             
             steps{
                timeout(time: 1, unit: 'MINUTES'){
@@ -118,7 +118,7 @@ pipeline {
                 }
             }
         }
-        */
+        
         stage('Deploy Prod Setup'){
             agent{
                 docker{
