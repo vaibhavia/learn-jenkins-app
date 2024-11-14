@@ -39,7 +39,7 @@ pipeline {
         */
 
         stage('Tests'){
-            parallel{
+           // parallel{
                 stage('Unit Test'){
                     agent{
                         docker{
@@ -91,7 +91,7 @@ pipeline {
                         }
                     }
                 }
-            }
+            //}
         }
         stage('Deploy Staging Setup'){
             agent{
