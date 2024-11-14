@@ -4,7 +4,7 @@ pipeline {
     environment{
         NETLIFY_SITE_ID = 'b5e53243-8a3a-4607-9673-94f376c15549'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        REACT_APP_VERSION = '1.2.3'
+        //REACT_APP_VERSION = '1.2.3'
 
     }
 
@@ -80,14 +80,14 @@ pipeline {
                         #node_modules/.bin/serve -s build - using serve tool's relative path we are starting the webserver locally instead of globally
                         node_modules/.bin/serve -s build &
                         # & in the end of the command runs it in the background. 
-                        sleep 10
+                        sleep 20
                         npx playwright test --reporter=html
                         #This would start the test
                         '''
                     }
                     post{
                         always{
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright local HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright local Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
