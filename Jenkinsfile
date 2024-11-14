@@ -80,7 +80,7 @@ pipeline {
                         #node_modules/.bin/serve -s build - using serve tool's relative path we are starting the webserver locally instead of globally
                         node_modules/.bin/serve -s build &
                         # & in the end of the command runs it in the background. 
-                        sleep 15
+                        sleep 10
                         npx playwright test --reporter=html
                         #This would start the test
                         '''
@@ -93,7 +93,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy Staging Setup'){
             agent{
                 docker{
