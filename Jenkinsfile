@@ -40,7 +40,7 @@ pipeline {
 
         stage('Docker'){
             steps{
-                sh 'docker build -t vb-plawright-image .'
+                sh 'docker build -t custom-plawright-image .'
             }    
         }
         stage('Tests'){
@@ -71,7 +71,7 @@ pipeline {
                     agent{
                         docker{
                             //image 'mcr.microsoft.com/playwright:v1.48.1-jammy'
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'custom-plawright-image'
                             reuseNode true
                         }
                     }
@@ -128,7 +128,7 @@ pipeline {
         stage('Staging E2E Test'){
             agent{
                  docker{
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'custom-plawright-image'
                     reuseNode true
                 }
             }
@@ -169,18 +169,18 @@ pipeline {
             steps{
                 sh '''
                 echo 'Prod Deployment stage'
-                npm install netlify-cli
-                node_modules/.bin/netlify --version
+                //npm install netlify-cli
+                netlify --version
                 echo "Deploying to production. Site Id: $NETLIFY_SITE_ID"
-                node_modules/.bin/netlify status
-                node_modules/.bin/netlify deploy --dir=build --prod
+                netlify status
+                netlify deploy --dir=build --prod
                 '''
             }
         }
         stage('Prod E2E Test'){
                     agent{
                         docker{
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'custom-plawright-image'
                             reuseNode true
                         }
                     }
