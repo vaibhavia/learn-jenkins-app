@@ -37,12 +37,6 @@ pipeline {
              }
         }
         */
-
-        stage('Docker'){
-            steps{
-                sh 'docker build -t custom-plawright-image .'
-            }    
-        }
         stage('Tests'){
            parallel{
                 stage('Unit Test'){

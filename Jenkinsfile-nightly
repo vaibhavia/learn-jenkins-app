@@ -1,0 +1,11 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build nightly Docker image'){
+            steps{
+                sh 'docker build -t custom-plawright-image .'
+            }    
+        }
+    }    
+}
