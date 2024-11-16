@@ -71,7 +71,7 @@ pipeline {
                     agent{
                         docker{
                             //image 'mcr.microsoft.com/playwright:v1.48.1-jammy'
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'custom-plawright-image'
                             reuseNode true
                         }
                     }
@@ -79,11 +79,11 @@ pipeline {
                         sh '''
                         echo 'E2E stage steps'
                         #npm install -g serve - this command installs serve tool GLOBALLY. serve help us install a simple http webserver inorder to test the E2E on some running application. In our case webserver.
-                        npm install serve
+                        #npm install serve
                         #installs serve tool LOCALLY.
                         #serve -s build - this command starts webserver globally
                         #node_modules/.bin/serve -s build - using serve tool's relative path we are starting the webserver locally instead of globally
-                        node_modules/.bin/serve -s build &
+                        serve -s build &
                         # & in the end of the command runs it in the background. 
                         sleep 10
                         npx playwright test --reporter=html
