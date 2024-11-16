@@ -101,7 +101,7 @@ pipeline {
         stage('Deploy Staging Setup'){
             agent{
                 docker{
-                    image 'node:18-alpine'
+                    image 'custom-plawright-image'
                     reuseNode true
                 }
             }                  
@@ -162,7 +162,7 @@ pipeline {
         stage('Deploy Prod Setup'){
             agent{
                 docker{
-                    image 'node:18-alpine'
+                    image 'custom-plawright-image'
                     reuseNode true
                 }
             }                  
