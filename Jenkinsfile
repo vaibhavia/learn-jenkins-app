@@ -108,15 +108,15 @@ pipeline {
             steps{
                 sh '''
                 echo 'Staging Deployment stage'
-                //npm install netlify-cli node-jq - commenting as now we would use docker image that has these tools installed
-                //node_modules/.bin/netlify --version - commenting coz now we don't need to execute this locally from bin folder as we are now using docker image in which it is installed globally
+                #npm install netlify-cli node-jq - commenting as now we would use docker image that has these tools installed
+                #node_modules/.bin/netlify --version - commenting coz now we don't need to execute this locally from bin folder as we are now using docker image in which it is installed globally
                 netlify --version
                 echo "Deploying to Staging. Site Id: $NETLIFY_SITE_ID"
-                //node_modules/.bin/netlify status
+                #node_modules/.bin/netlify status
                 netlify status
-                //node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+                #node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                 netlify deploy --dir=build --json > deploy-output.json
-                //node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
+                #node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
                 node-jq -r '.deploy_url' deploy-output.json
                 '''
                 script{
