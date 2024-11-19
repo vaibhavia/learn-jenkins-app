@@ -14,7 +14,6 @@ pipeline {
           If we directly want to run the TEST stage, we can comment the BUILD stage block and thus only TEST stage will be executed.
         */
         // This format is used to comment single line. Commented lines turns green.
-        /*
         stage('Build') {
             agent {
                 docker{
@@ -36,11 +35,11 @@ pipeline {
                 '''
              }
         }
-        */
         stage('AWS'){
             agent{
                 docker{
                     image 'amazon/aws-cli'
+                    reuseNode true
                     args "--entrypoint=''"
                 }
             }
@@ -52,9 +51,11 @@ pipeline {
                 {
                 sh'''
                 aws --version
-                aws s3 ls
-                echo "Hello S3!" > index.html
-                aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                #aws s3 ls
+                #echo "Hello S3!" > index.html
+                #aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                aws s3 sync build s3://$AWS_S3_BUCKET
+                # s3 sync command syncs the BUILD directory to the above mentioned bucket. And thus by syncing the bukd directory we have hosted a website on AWS.
                 '''
                 }            
             }
