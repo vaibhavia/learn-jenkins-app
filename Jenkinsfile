@@ -44,12 +44,17 @@ pipeline {
                     args "--entrypoint=''"
                 }
             }
+            environment{
+                AWS_S3_BUCKET = 'learn-jenkins-202411191206'
+            }
             steps{
                 withCredentials([usernamePassword(credentialsId: 'AccessKeyCredForS3AWSAccess', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')])
                 {
                 sh'''
                 aws --version
                 aws s3 ls
+                echo "Hello S3! Uploading this file from jenkins to S3" > index.html
+                cp index.html s3://$AWS_S3_BUCKET/index.html
                 '''
                 }            
             }
