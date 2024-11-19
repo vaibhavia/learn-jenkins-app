@@ -54,7 +54,7 @@ pipeline {
                 aws --version
                 aws s3 ls
                 echo "Hello S3! Uploading this file from jenkins to S3" > index.html
-                cp index.html s3://$AWS_S3_BUCKET/index.html
+                aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
                 '''
                 }            
             }
