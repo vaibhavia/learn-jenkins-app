@@ -28,10 +28,9 @@ pipeline {
                     ls -la
                     node --version
                     npm --version
-                    npm ci
-                    npm run build
-                    ls -la
-                    echo "npm dependencies such as node_modules folder installed using npm ci command and then we ran the npm build"
+                    #npm ci
+                    #npm run build
+                    #echo "npm dependencies such as node_modules folder installed using npm ci command and then we ran the npm build"
                 '''
              }
         }
